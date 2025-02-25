@@ -37,6 +37,15 @@ Future<Response> _get(RequestContext ctx) async {
 Future<Response> _post(RequestContext ctx) async {
   final dataSource = ctx.read<TodosDataSource>();
   final data = await ctx.request.json() as Map<String, dynamic>;
+  if (!data.containsKey('title')) {
+    return Response.json(
+      statusCode: HttpStatus.badRequest,
+      body: {
+        'status': false,
+        'message': 'title is missing',
+      },
+    );
+  }
   final todo = Todo.fromJson(data);
 
   return Response.json(
